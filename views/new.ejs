@@ -1,0 +1,58 @@
+<%- include('partials/head') %>
+<h1>New invoice</h1>
+<form method="post" action="/invoices" class="card">
+  <div class="grid">
+    <label>Client name<input name="client_name" required /></label>
+    <label
+      >Client email<input name="client_email" type="email" required
+    /></label>
+    <label>Due date<input name="due_date" type="date" required /></label>
+  </div>
+  <h3>Line items</h3>
+  <div id="items">
+    <div class="item">
+      <input name="desc" placeholder="e.g. Website build (5 pages)" required />
+      <input
+        name="qty"
+        type="number"
+        step="0.01"
+        min="0.01"
+        value="1"
+        required
+      /><input
+        name="price"
+        type="number"
+        step="0.01"
+        min="0"
+        placeholder="Unit price"
+        required
+      />
+    </div>
+  </div>
+  <button
+    type="button"
+    class="ghost"
+    onclick="const i=document.querySelector('.item').cloneNode(true);i.querySelectorAll('input').forEach((x,n)=>x.value=n==1?1:'');document.getElementById('items').append(i)"
+  >
+    + Add item
+  </button>
+  <button
+    type="button"
+    class="ghost"
+    onclick="const p=document.getElementById('items');if (p.children.length>1) {
+      const lastitem=p.lastElementChild
+      lastitem.remove()  
+    }"
+  >
+    + Delete item
+  </button>
+  <label
+    >Notes<textarea
+      name="notes"
+      rows="2"
+      placeholder="Terms, thank-you, etc."
+    ></textarea>
+  </label>
+  <button>Save as draft</button>
+</form>
+<%- include('partials/foot') %>

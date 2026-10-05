@@ -1,0 +1,5 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Invoicer</title><link rel="stylesheet" href="/style.css"></head><body>
+<header class="bar"><a href="/" class="logo">Invoicer</a>
+<% if (user) { %><form method="post" action="/logout"><span><%= user %></span> <button class="link">Log out</button></form><% } %></header><main>
+<% if (error) { %><p class="err"><%= error %></p><% } %>

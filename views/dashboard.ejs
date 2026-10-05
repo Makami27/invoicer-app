@@ -1,0 +1,87 @@
+<%- include('partials/head') %>
+<div class="row">
+  <h1>Invoices</h1>
+  <a class="btn" href="/invoices/new">+ New invoice</a>
+</div>
+<div class="stats">
+  <div class="card">
+    <small>Outstanding</small><b><%= money(outstanding) %></b>
+  </div>
+  <div class="card">
+    <small>Overdue</small><b class="bad"><%= money(overdue) %></b>
+  </div>
+  <div class="card">
+    <small>Paid</small><b class="ok"><%= money(paid) %></b>
+  </div>
+</div>
+<div class="scroll">
+  <table>
+    <tr>
+      <th>#</th>
+      <th>Client</th>
+      <th>Due</th>
+      <th>Status</th>
+      <th class="r">Total</th>
+    </tr>
+    <% rows.forEach(r => { %>
+    <tr>
+      <td><a href="/invoices/<%= r.id %>"><%= num(r.seq) %></a></td>
+      <td><%= r.client %></td>
+      <td><%= day(r.due_date) %></td>
+      <td>
+        <span class="tag <%= r.overdue ? 'overdue' : r.status %>"
+          ><%= r.overdue ? 'overdue' : r.status %></span
+        >
+      </td>
+      <td class="r"><%= money(r.total) %></td>
+    </tr>
+    <% }) %> <% if (!rows.length) { %>
+    <tr>
+      <td colspan="5">No invoices yet.</td>
+    </tr>
+    <% } %>
+  </table>
+</div>
+<h2>Payment instructions</h2>
+<form method="post" action="/settings" class="card">
+  <label
+    >Shown on every invoice (bank details, PayPal, crypto address, etc.)
+    <textarea name="payment_info" rows="3"><%= payment_info %></textarea></label
+  ><button>Save</button>
+</form>
+
+
+
+<div style="width: 600px; margin: auto;">
+    <canvas id="myChart"></canvas>
+</div>
+
+<div>
+    <canvas id="myChart"></canvas>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <script>
+    const ctx = document.getElementById('myChart');
+  
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        datasets: [{
+          label: '# of Votes',
+          data: [12, 19, 3, 5, 2, 3],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  </script>
+   

@@ -1,0 +1,7 @@
+<%- include('partials/head') %>
+<h1>Create account</h1><form method="post" class="card narrow">
+<label>Name / business<input name="name" required></label>
+<label>Email<input name="email" type="email" required></label>
+<label>Password (8+ chars)<input name="password" type="password" minlength="8" required></label>
+<button>Sign up</button><p><a href="/login">I have an account</a></p></form>
+<%- include('partials/foot') %>

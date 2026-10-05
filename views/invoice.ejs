@@ -1,0 +1,67 @@
+<%- include('partials/head') %> <% if (owner) { %>
+<div class="row noprint">
+  <a href="/dashboard">&larr; Back</a>
+  <form method="post" action="/invoices/<%= inv.id %>/status" class="inline">
+    <% if (inv.status==='draft') { %><button name="status" value="sent">
+      Mark as sent</button
+    ><% } %> <% if (inv.status==='sent') { %><button name="status" value="paid">
+      Mark as paid</button
+    ><% } %> <% if (inv.status!=='void' && inv.status!=='paid') { %><button
+      name="status"
+      value="void"
+      class="ghost"
+    >
+      Void</button
+    ><% } %>
+    <button type="button" class="ghost" onclick="print()">Print / PDF</button>
+  </form>
+</div>
+<p class="card noprint">
+  Client link: <code><%= link %></code><% if (inv.status==='draft') { %> (live
+  once marked as sent)<% } %>
+</p>
+<% } %>
+<article class="card sheet">
+  <div class="row">
+    <div>
+      <h1><%= num(inv.seq) %></h1>
+      <span class="tag <%= inv.status %>"><%= inv.status %></span>
+    </div>
+    <div class="r"><b><%= inv.from_name %></b><br /><%= inv.from_email %></div>
+  </div>
+  <p>
+    <b>Bill to:</b> <%= inv.client_name %> (<%= inv.client_email %>)<br />Issued
+    <%= day(inv.issue_date) %> &middot; Due <b><%= day(inv.due_date) %></b>
+  </p>
+  <div class="scroll">
+    <table>
+      <tr>
+        <th>Description</th>
+        <th class="r">Qty</th>
+        <th class="r">Price</th>
+        <th class="r">Amount</th>
+      </tr>
+      <% inv.items.forEach(x => { %>
+      <tr>
+        <td><%= x.description %></td>
+        <td class="r"><%= Number(x.quantity) %></td>
+        <td class="r"><%= money(x.unit_cents) %></td>
+        <td class="r"><%= money(Math.round(x.quantity * x.unit_cents)) %></td>
+      </tr>
+      <% }) %>
+      <tr>
+        <td colspan="3" class="r"><b>Total due</b></td>
+        <td class="r"><b><%= money(inv.total) %></b></td>
+      </tr>
+    </table>
+  </div>
+  <% if (inv.notes) { %>
+  <p class="pre"><%= inv.notes %></p>
+  <% } %> <% if (inv.payment_info && inv.status !== 'paid') { %>
+  <h3>How to pay</h3>
+  <p class="pre"><%= inv.payment_info %></p>
+  <% } %> <% if (inv.status === 'paid') { %>
+  <p class="ok"><b>Paid &mdash; thank you!</b></p>
+  <% } %>
+</article>
+<%- include('partials/foot') %>
