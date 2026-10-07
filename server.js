@@ -63,11 +63,9 @@ app.post(
   wrap(async (req, res) => {
     const { name, email, password } = req.body;
     if (!name || !email || !password || password.length < 8)
-      return res
-        .status(400)
-        .render("register", {
-          error: "All fields required; password min 8 characters.",
-        });
+      return res.status(400).render("register", {
+        error: "All fields required; password min 8 characters.",
+      });
     try {
       const [u] = await q(
         "INSERT INTO users(name,email,password_hash) VALUES($1,lower($2),$3) RETURNING id,name",
@@ -139,13 +137,18 @@ app.get(
       "SELECT payment_info FROM users WHERE id=$1",
       [req.session.uid]
     );
-    res.render("dashboard", {
-      rows,
-      payment_info,
-      outstanding: sum((r) => r.status === "sent"),
-      paid: sum((r) => r.status === "paid"),
-      overdue: sum((r) => r.overdue),
-    });
+
+    res.render(
+      "dashboard",
+      {
+        rows,
+        payment_info,
+        outstanding: sum((r) => r.status === "sent"),
+        paid: sum((r) => r.status === "paid"),
+        overdue: sum((r) => r.overdue),
+      }
+    );
+ 
   })
 );
 
@@ -168,13 +171,11 @@ app.post(
       c: Math.round(parseFloat(P[i]) * 100),
     })).filter((i) => i.d && i.q > 0 && i.c >= 0);
     if (!b.client_name || !b.client_email || !b.due_date || !items.length)
-      return res
-        .status(400)
-        .render("new", {
-          today: b.issue_date,
-          error:
-            "Client, due date and at least one valid line item are required.",
-        });
+      return res.status(400).render("new", {
+        today: b.issue_date,
+        error:
+          "Client, due date and at least one valid line item are required.",
+      });
     const db = await pool.connect();
     try {
       await db.query("BEGIN");

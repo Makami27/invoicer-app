@@ -46,42 +46,43 @@
 <form method="post" action="/settings" class="card">
   <label
     >Shown on every invoice (bank details, PayPal, crypto address, etc.)
-    <textarea name="payment_info" rows="3"><%= payment_info %></textarea></label
-  ><button>Save</button>
+    <textarea name="payment_info" rows="3"><%= payment_info %></textarea></label>
+    <button>Save</button>
 </form>
 
 
 
-<div style="width: 600px; margin: auto;">
+<!-- 1. Store data in an HTML attribute -->
+<div id="server-data" data-payload="<%= outstanding %>"></div>
+<div id="server-data2" data-payload="<%= paid %>"></div>
+<div id="server-data3" data-payload="<%= overdue %>"></div>
+
+<div class= "card" style="width: 30vw; margin: auto;">
     <canvas id="myChart"></canvas>
 </div>
 
-<div>
-    <canvas id="myChart"></canvas>
-  </div>
   
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
   <script>
-    const ctx = document.getElementById('myChart');
+    let input1= JSON.parse(document.getElementById('server-data').getAttribute('data-payload'));;
+    let input2= JSON.parse(document.getElementById('server-data2').getAttribute('data-payload'));;
+    let input3= JSON.parse(document.getElementById('server-data3').getAttribute('data-payload'));;
+
+
+    const ctx = document.getElementById('myChart').getContext('2d');
   
     new Chart(ctx, {
-      type: 'bar',
+      type: 'doughnut',
       data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        labels: ['Outstanding', 'Paid', 'Overdue'],
         datasets: [{
-          label: '# of Votes',
-          data: [12, 19, 3, 5, 2, 3],
+          label: 'Payment Status',
+          data: [input1, input2, input3],
           borderWidth: 1
         }]
       },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
+      
     });
   </script>
    
